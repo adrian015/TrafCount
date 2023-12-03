@@ -19,10 +19,12 @@ class detection_process:
     # Checks set of class type in order to see if track_id has been seen,
     # if so it updates firestore with time stamp and adds it to the set
     def update_detections(self, new_detections):
+        
         data = json.loads(new_detections)
         for detection in data:
-            if detection['track_id'] not in self.previous_detections[detection['name']]:
-                print("NEW THING!!! ", detection['name'], ": ", detection['track_id'])
-                doc_ref = self.db.collection("Traffic")
-                doc_ref.add({"type": detection['name'], "time_detected": firestore.SERVER_TIMESTAMP})
-                self.previous_detections[detection['name']].add(detection['track_id'])
+            if 'track_id' in detection:
+                if detection['track_id'] not in self.previous_detections[detection['name']]:
+                    print("NEW THING!!! ", detection['name'], ": ", detection['track_id'])
+                    doc_ref = self.db.collection("Traffic")
+                    doc_ref.add({"type": detection['name'], "time_detected": firestore.SERVER_TIMESTAMP})
+                    self.previous_detections[detection['name']].add(detection['track_id'])
