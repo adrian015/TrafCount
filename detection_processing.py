@@ -6,7 +6,6 @@ from firebase_admin import firestore
 class detection_process:
     def __init__(self):
         self.previous_detections = {'-cyclist' : {-1}, '-large_vehicle' : {-1}, '-motorcyclist' : {-1}, '-pedestrian' : {-1}, '-vehicle' : {-1}}
-        
         cred = credentials.Certificate('firebase_credential_key.json')
         firebase_admin.initialize_app(cred)
         self.db = firestore.client()
@@ -24,7 +23,7 @@ class detection_process:
         for detection in data:
             if 'track_id' in detection:
                 if detection['track_id'] not in self.previous_detections[detection['name']]:
-                    print("NEW THING!!! ", detection['name'], ": ", detection['track_id'])
+                    print("NEW OBJECT: ", detection['name'], ": ", detection['track_id'])
                     doc_ref = self.db.collection("Traffic")
                     doc_ref.add({"type": detection['name'], "time_detected": firestore.SERVER_TIMESTAMP})
                     self.previous_detections[detection['name']].add(detection['track_id'])
